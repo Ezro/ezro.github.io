@@ -28,11 +28,7 @@
         </span>
       </aside>
       <main>
-        <div class="page">
-          <!-- {{ content }} -->
-          <CatalogItem />
-          <!-- <Logo color="green" /> -->
-        </div>
+        <canvas id="pageCanvas" style="flex: auto"></canvas>
       </main>
       <footer>
         <div class="footer">FOOTER</div>
@@ -43,13 +39,13 @@
 
 <script>
 import Logo from "./components/Logo";
-import CatalogItem from "./components/CatalogItem";
+// import CatalogItem from "./components/CatalogItem";
 
 export default {
   name: "App",
   components: {
     Logo,
-    CatalogItem,
+    // CatalogItem,
   },
   methods: {
     toggleCatalog() {

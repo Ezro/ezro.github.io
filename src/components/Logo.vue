@@ -6,9 +6,8 @@
     viewBox="0 0 422.1 329.5"
     width="50"
     height="50"
-    @load="makeDraggable"
     ref="sheets"
-    class="draggable"
+    @click="selectSvg"
   >
     <path
       :class="color"
@@ -34,62 +33,25 @@ export default {
       required: false,
     },
   },
-  mounted() {
-    this.makeDraggable();
+  data: function () {
+    return {
+      pageCanvas: document.getElementById("pageCanvas"),
+    };
   },
   methods: {
-    makeDraggable() {
-      // var svg = evt.target;
-      var svg = this.$refs.sheets;
-      svg.addEventListener("mousedown", startDrag);
-      svg.addEventListener("mousemove", drag);
-      svg.addEventListener("mouseup", endDrag);
-      svg.addEventListener("mouseleave", endDrag);
-
-      var selectedElement, offset, transform;
-
-      function startDrag(evt) {
-        if (evt.target.classList.contains("draggable")) {
-          selectedElement = evt.target;
-          offset = getMousePosition(evt);
-          // Get all the transforms currently on this element
-          var transforms = selectedElement.transform.baseVal;
-          // Ensure the first transform is a translate transform
-          if (
-            transforms.length === 0 ||
-            transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE
-          ) {
-            // Create a transform that translates by (0, 0)
-            var translate = svg.createSVGTransform();
-            translate.setTranslate(0, 0);
-            // Add the translation to the front of the transforms list
-            selectedElement.transform.baseVal.insertItemBefore(translate, 0);
-          }
-          transform = transforms.getItem(0);
-          offset.x -= transform.matrix.e;
-          offset.y -= transform.matrix.f;
-        }
-      }
-
-      function drag(evt) {
-        if (selectedElement) {
-          evt.preventDefault();
-          var coord = getMousePosition(evt);
-          transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
-        }
-      }
-
-      function endDrag() {
-        selectedElement = false;
-      }
-
-      function getMousePosition(evt) {
-        var ctm = svg.getScreenCTM();
-        return {
-          x: (evt.clientX - ctm.e) / ctm.a,
-          y: (evt.clientY - ctm.f) / ctm.d,
-        };
-      }
+    selectSvg() {
+      console.log(this.$refs);
+      var clone = this.$refs.sheets.cloneNode(true);
+      clone.classList.add("draggable");
+      clone.addEventListener("mousedown", this.startDrag);
+      clone.addEventListener("mousemove", this.drag);
+      clone.addEventListener("mouseup", this.endDrag);
+      clone.addEventListener("mouseleave", this.endDrag);
+      console.log(clone);
+      // this.page.appendChild(clone);
+      var ctx = this.pageCanvas.getContext("2d");
+      ctx.fillStyle = "green";
+      ctx.fillRect(10, 10, 150, 100);
     },
   },
 };
